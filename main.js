@@ -1,5 +1,11 @@
-var express = require('express');
-var app = express()
+const express = require('express');
+const bodyParser = require('body-parser')
+const mongodb = require('mongodb')
+const app = express()
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
@@ -38,12 +44,32 @@ app.post('/editFunAndTraining', (req, res) => {
     
 })
 
-app.get('/chat', () => {
-    res.render('chat')
+app.get('/chat', (req, res) => {
+    var mongoClient = mongodb.MongoClient
+    var url = 'mongodb://localhost:27017/petRatData'
+    
+    mongoClient.connect(url, (err, db) => {
+        if(err) {
+            console.log(err)   
+        } 
+        else {
+           var collection = db.collection('chatMessage')
+           collection.find().toArray((err, collection) => {
+                                     
+            })
+           res.render('chat')
+        }
+    })
 }) 
 
 app.post('/addingMessage', (req, res) => {
-    
+    var collection = db.collection('chatMessage')
+    collection.save(req.body, (err, result) => {
+        if (err) {
+            console.log(err)
+        } 
+        res.redirect('/chat')
+    });
 })
 
 app.listen(3000, ()  => {
