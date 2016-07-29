@@ -1,0 +1,15 @@
+{
+  "name": "petrat",
+  "version": "1.0.0",
+  "description": "this is a webapp that i am making that is all about pet rats",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marek Newton",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.5.1",
+    "express": "^4.14.0"
+  }
+}
