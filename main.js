@@ -5,6 +5,7 @@ const app = express()
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(express.static('public'))
 
 app.set('view engine', 'ejs')
 
@@ -15,20 +16,20 @@ app.get('/', (req, res) => {
 app.get('/food', (req, res) => {
     var foodCollection = db.collection('infoPost')
         .find().toArray((err,foodCollection) => {
-            
-           res.render('food',{infoPost: foodCollection}) 
+
+           res.render('food',{infoPost: foodCollection})
     })
 })
 
 app.put('/editfood', (req, res) => {
-      
+
 })
 
 app.get('/envirment', (req, res) => {
     var envirmentCollection = db.collection('infoPost')
         .find().toArray((err,envirmentCollection) => {
-            
-           res.render('envirment',{infoPost: envirmentCollection}) 
+
+           res.render('envirment',{infoPost: envirmentCollection})
     })
 })
 
@@ -50,22 +51,19 @@ app.post('/editEnvirment', (req, res) => {
                 res.send(result)
             }
         }
-        fetch({ /* request */ })
-            .then(res => {
-        if (res.ok) return res.json()
-        })
-        .then(data => {
-            console.log(data)
-        })
     )
+    res.redirect('/envirment')
 })
 
 app.get('/health', (req, res) => {
-    res.render('health')
+    var ratHealthCollection = db.collection('infoPost').find()
+      .toArray((err,ratHealthCollection) => {
+          res.render('health',{infoPost:ratHealthCollection})
+      })
 })
 
 app.post('/editHealth', (req, res) => {
-    
+
 })
 
 app.get('/funAndTraining', (req, res) => {
@@ -73,19 +71,19 @@ app.get('/funAndTraining', (req, res) => {
 })
 
 app.post('/editFunAndTraining', (req, res) => {
-    
+
 })
 
 app.get('/chat', (req, res) => {
    var chatCollection = db.collection('chatMessage')
    .find().toArray((err, chatCollection) => {
-       
-       res.render('chat', {chatMessage: chatCollection})  
-   }) 
-}) 
+
+       res.render('chat', {chatMessage: chatCollection})
+   })
+})
 
 app.post('/addingMessage', (req, res) => {
-    let messages = db.collection('chatMessage').save(req.body, 
+    let messages = db.collection('chatMessage').save(req.body,
                                             (err, result) => {
         if(err) {
             console.log(err)
@@ -93,7 +91,7 @@ app.post('/addingMessage', (req, res) => {
         else {
             res.redirect('/chat')
         }
-    })      
+    })
 })
 
 let db;
