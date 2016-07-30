@@ -3,10 +3,20 @@
 <head>
 </head>
 <body>
-    <form action='/addingMessage' method='post'>
-        <input type='text' name='title'>
-        <textarea type='text' name='Content'></textarea>
-        <button type='submit'>Send</button>
-    </form>
+    <div>
+        <%for(i = 0; i < chatMessage.length; i++) {%>
+            <div id="chat">
+                <h3><%= chatMessage[i].title %></h3>
+                <p><%= chatMessage[i].Content %></p>
+            </div>
+        <% } %> 
+    </div>
+    <div>
+        <form action='/addingMessage' method='post'>
+            <input type='text' name='title'>
+            <textarea type='text' name='Content'></textarea>
+            <button type='submit'>Send</button>
+        </form>
+    </div>
 </body>
 </html>

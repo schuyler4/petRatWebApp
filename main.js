@@ -9,23 +9,55 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
-    res.render('home')   
+    res.render('home')
 })
 
 app.get('/food', (req, res) => {
-    res.render('food')
+    var foodCollection = db.collection('infoPost')
+        .find().toArray((err,foodCollection) => {
+            
+           res.render('food',{infoPost: foodCollection}) 
+    })
 })
 
-app.post('/editfood', (req, res) => {
-    
+app.put('/editfood', (req, res) => {
+      
 })
 
 app.get('/envirment', (req, res) => {
-    res.render('envirment')
+    var envirmentCollection = db.collection('infoPost')
+        .find().toArray((err,envirmentCollection) => {
+            
+           res.render('envirment',{infoPost: envirmentCollection}) 
+    })
 })
 
 app.post('/editEnvirment', (req, res) => {
-    
+    db.collection('infoPosts').findOneAndUpdate(
+        {title:"Food and Diet for Rats"},
+        {
+            $set: {
+                content: req.body.content
+            }
+        }, {
+            sort: {_id: -1},
+            upsert: true
+        }, (err, result) => {
+            if(err) {
+                console.log(err)
+            }
+            else {
+                res.send(result)
+            }
+        }
+        fetch({ /* request */ })
+            .then(res => {
+        if (res.ok) return res.json()
+        })
+        .then(data => {
+            console.log(data)
+        })
+    )
 })
 
 app.get('/health', (req, res) => {
@@ -45,33 +77,38 @@ app.post('/editFunAndTraining', (req, res) => {
 })
 
 app.get('/chat', (req, res) => {
-    var mongoClient = mongodb.MongoClient
-    var url = 'mongodb://localhost:27017/petRatData'
-    
-    mongoClient.connect(url, (err, db) => {
-        if(err) {
-            console.log(err)   
-        } 
-        else {
-           var collection = db.collection('chatMessage')
-           collection.find().toArray((err, collection) => {
-                                     
-            })
-           res.render('chat')
-        }
-    })
+   var chatCollection = db.collection('chatMessage')
+   .find().toArray((err, chatCollection) => {
+       
+       res.render('chat', {chatMessage: chatCollection})  
+   }) 
 }) 
 
 app.post('/addingMessage', (req, res) => {
-    var collection = db.collection('chatMessage')
-    collection.save(req.body, (err, result) => {
-        if (err) {
+    let messages = db.collection('chatMessage').save(req.body, 
+                                            (err, result) => {
+        if(err) {
             console.log(err)
-        } 
-        res.redirect('/chat')
-    });
+        }
+        else {
+            res.redirect('/chat')
+        }
+    })      
 })
 
-app.listen(3000, ()  => {
-    console.log("Express started")
-});
+let db;
+
+let mongoClient = mongodb.MongoClient
+let url = 'mongodb://localhost:27017/petRatData'
+
+mongoClient.connect(url, (err, database) => {
+    if(err) {
+        console.log(err)
+    }
+    else {
+        db = database;
+        app.listen(3000, ()  => {
+            console.log("Express started")
+        })
+    }
+})

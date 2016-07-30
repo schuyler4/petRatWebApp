@@ -1,0 +1,17 @@
+<style>
+    textarea {
+        width: 500px;
+        height: 500px;
+    }
+</style>
+<div id=titleContainer>
+    <h3><%= infoPost[1].title %></h3>
+</div>
+<div id="infoContainer">
+    <p><%=  infoPost[1].content %></p>
+</div>
+<form action='/editEnvirment' type='put'>
+    <h3><%= infoPost[1].title %></h3>
+    <textarea><%= infoPost[1].content %></textarea>
+    <button type='submit'>Submit Edits</button>
+</form>
