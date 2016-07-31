@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const mongodb = require('mongodb')
+const assert = require('assert');
+const ObjectId = require('mongodb').ObjectID;
 const app = express()
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -21,14 +23,43 @@ app.get('/food', (req, res) => {
     })
 })
 
-app.put('/editfood', (req, res) => {
+var updateFood = function(db, callback) {
+   db.collection('infoPost').updateOne(
+      { "content" : "this is changed content" },
+      {
+        $set: { "content": "this is somemore content" },
+      }, function(err, results) {
+      console.log(results);
+      callback();
+   });
+};
 
+app.get('/editfood', (req, res) => {
+    let collection = db.collection('infoPost')
+      .find().toArray((err, collection) => {
+
+         res.render('editfood',{infoPost: collection})
+      })
+})
+
+app.put('/editFood', (req, res) => {
+  db.collection('infoPost')
+  .findOneAndUpdate({"title" : "food"}, {
+    $set: {
+      content: req.body.content
+    }
+  }, {
+    sort: {_id: -1},
+    upsert: true
+  }, (err, result) => {
+    if (err) return res.send(err)
+    res.send(result)
+  });
 })
 
 app.get('/envirment', (req, res) => {
     var envirmentCollection = db.collection('infoPost')
         .find().toArray((err,envirmentCollection) => {
-
            res.render('envirment',{infoPost: envirmentCollection})
     })
 })

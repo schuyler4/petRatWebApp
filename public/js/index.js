@@ -1,12 +1,40 @@
-var updateFood = document.getElementById('submitEditButton')
+var update = document.getElementById('submitEditButton');
 
-updateFood.addEventListener('click', function () {
-  fetch('infoPost', {
-  method: 'put',
-  headers: {'Content-Type': 'application/json'},
-  body: JSON.stringify({
-    'content': 'this is the food and diet page for pet rats if you want to add' +
-    'you knolege of edit something feel free to with the edit button below'
+update.addEventListener('click', function() {
+    console.log('panda')
+    fetch('editFood', {
+        method: 'put',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            'content': 'i hope this worksssssssssssssssssssssssss',
+        })
+    })
+    .then(res => {
+        if (res.ok) return res.json()
+    })
+    .then(data => {
+        console.log(data)
+        window.location.reload()
+    })
+});
+
+/*var remove = document.getElementById('delete');
+
+remove.addEventListener('click', function () {
+  fetch('friends', {
+    method: 'delete',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      'name': 'joey'
     })
   })
-})
+  .then(res => {
+    if (res.ok) return res.json()
+  }).
+  then(data => {
+    console.log(data)
+    window.location.reload()
+  })
+})*/
