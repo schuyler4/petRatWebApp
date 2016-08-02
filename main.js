@@ -15,100 +15,44 @@ app.get('/', (req, res) => {
     res.render('home')
 })
 
-app.get('/food', (req, res) => {
-    var foodCollection = db.collection('infoPost')
-        .find().toArray((err,foodCollection) => {
-
-           res.render('food',{infoPost: foodCollection})
-    })
-})
-
-var updateFood = function(db, callback) {
-   db.collection('infoPost').updateOne(
-      { "content" : "this is changed content" },
-      {
-        $set: { "content": "this is somemore content" },
-      }, function(err, results) {
-      console.log(results);
-      callback();
-   });
-};
-
-app.get('/editfood', (req, res) => {
-    let collection = db.collection('infoPost')
-      .find().toArray((err, collection) => {
-
-         res.render('editfood',{infoPost: collection})
+function renderPage(url, pageToRender) {
+  app.get(url, (req, res) => {
+      var collection = db.collection('infoPost')
+          .find().toArray((err, collection) => {
+             res.render(pageToRender,{infoPost: collection})
       })
-})
+  })
+}
 
-app.put('/editFood', (req, res) => {
-  db.collection('infoPost')
-  .findOneAndUpdate({"title" : "food"}, {
-    $set: {
-      content: req.body.content
+function updateInfo(url ,title, redirect) {
+  app.post(url, (req, res) => {
+    var contentToAdd = {
+      content:req.body.content
     }
-  }, {
-    sort: {_id: -1},
-    upsert: true
-  }, (err, result) => {
-    if (err) return res.send(err)
-    res.send(result)
-  });
-})
-
-app.get('/envirment', (req, res) => {
-    var envirmentCollection = db.collection('infoPost')
-        .find().toArray((err,envirmentCollection) => {
-           res.render('envirment',{infoPost: envirmentCollection})
+    db.collection('infoPost').updateOne({"title": title},
+      {$set: contentToAdd}, (err, result) => {
+        console.log('updated')
     })
-})
+    res.redirect(redirect)
+  })
+}
 
-app.post('/editEnvirment', (req, res) => {
-    db.collection('infoPosts').findOneAndUpdate(
-        {title:"Food and Diet for Rats"},
-        {
-            $set: {
-                content: req.body.content
-            }
-        }, {
-            sort: {_id: -1},
-            upsert: true
-        }, (err, result) => {
-            if(err) {
-                console.log(err)
-            }
-            else {
-                res.send(result)
-            }
-        }
-    )
-    res.redirect('/envirment')
-})
+renderPage('/food','food')
+renderPage('/editfood', 'food')
+updateInfo('/addToFood','food','/food')
 
-app.get('/health', (req, res) => {
-    var ratHealthCollection = db.collection('infoPost').find()
-      .toArray((err,ratHealthCollection) => {
-          res.render('health',{infoPost:ratHealthCollection})
-      })
-})
+renderPage('/envirment','envirment')
+renderPage('/editEnvirment','editEnvirment')
+updateInfo('/addToEnvirment', 'envirment', '/envirment')
 
-app.post('/editHealth', (req, res) => {
-
-})
-
-app.get('/funAndTraining', (req, res) => {
-    res.render('funAndTraing')
-})
-
-app.post('/editFunAndTraining', (req, res) => {
-
-})
+renderPage('/funAndTraining','funAndTraining')
+renderPage('/editFunAndTraining', 'editFunAndTraining')
+updateInfo('/addFunAndTraining', 'funAndTraining', '/funAndTraining')
 
 app.get('/chat', (req, res) => {
-   var chatCollection = db.collection('chatMessage')
+   let chatCollection = db.collection('chatMessage')
    .find().toArray((err, chatCollection) => {
-
+      console.log(chatCollection)
        res.render('chat', {chatMessage: chatCollection})
    })
 })
@@ -124,6 +68,30 @@ app.post('/addingMessage', (req, res) => {
         }
     })
 })
+/*let timestamp = _id.toString().substring(0,8)
+date = new Date( parseInt( timestamp, 16 ) * 1000 )*/
+
+function deleteMessageAfterTime() {
+  let collection = db.collection('chatMessage').find().toArray
+  ((err, collection) => {
+    if(collection.length > 0) {
+      db.collection('chatMessage').deleteOne({"title": collection[0].title},
+        (err, result) => {
+          console.log("deleted" + collection[0].title)
+      })
+    }
+  })
+}
+
+let collection = db.collection('chatMessage').find().toArray
+((err, collection) => {
+  if(collection.length > 0) {
+    console.log(collection[0].id)
+  }
+})
+/*db.penguins.find().sort({_id:-1}).limit(1).forEach(function (doc) {
+  console.log(doc._id.getTimestamp())
+})*/
 
 let db;
 

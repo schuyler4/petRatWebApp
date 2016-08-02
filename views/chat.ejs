@@ -9,11 +9,13 @@
                 <h3><%= chatMessage[i].title %></h3>
                 <p><%= chatMessage[i].Content %></p>
             </div>
-        <% } %> 
+        <% } %>
     </div>
     <div>
         <form action='/addingMessage' method='post'>
+            <input type="date" name="date">
             <input type='text' name='title'>
+            <input type=''
             <textarea type='text' name='Content'></textarea>
             <button type='submit'>Send</button>
         </form>

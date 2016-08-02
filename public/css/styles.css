@@ -1,6 +1,20 @@
-#header {
-    width: 100%;
-    height: 200px;
-    border:2px solid black;
+#headerBar {
+  background-color: #000033;
+  height: 150px;
+}
+#headerText {
+  padding: 0px;
+  color: white;
+}
+#navBarDiv {
+  background-color: black;
+  height: 90px;
+}
+.navBarItem {
+  color:white;
 }
 
+#homeImg {
+  width: 500;
+  height: auto;
+}
